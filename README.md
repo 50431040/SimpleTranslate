@@ -1,8 +1,10 @@
-# SimleTranslate
-一款极简的中英互译MacOS应用，调用GPT模型翻译
+# SimpleTranslate
+一款极简的中英互译MacOS原生应用，调用GPT模型翻译
+
+## 使用
+打开`Config.plist`，将`ApiKey`的值修改为`DeepSeek`生成的`ApiKey`，使用其他的模型（ChatGPT）可以修改`APIUrl`
 
 ## 界面
-
 还需优化
 
 ## GPT
