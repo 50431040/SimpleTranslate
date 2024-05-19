@@ -52,11 +52,22 @@ struct ContentView: View {
                             .stroke(Color.gray.opacity(0.5), lineWidth: 1)
                     )
                     .disabled(true)
+                    .onTapGesture {
+                        if (hasResult) {
+                            copyToClipBoard(textToCopy: resultText)
+                        }
+                    }
                 
             })
         }
         .padding(10)
         .frame(width: 300)
+    }
+    
+    func copyToClipBoard(textToCopy: String) {
+      let pasteBoard = NSPasteboard.general
+      pasteBoard.clearContents()
+      pasteBoard.setString(textToCopy, forType: .string)
     }
     
     func translate() {
@@ -71,22 +82,17 @@ struct ContentView: View {
                     body: [
                         "model": "deepseek-chat",
                         "messages": [
+                            ["role": "system", "content": """
+你是一个翻译家，你能根据我给出的文本，自动识别其语言（中文或英文），并将其翻译成另一种语言。请确保翻译准确无误，不需要回答问题，并只返回最终的翻译结果。
+
+文本示例："Hello, how are you?"
+输出示例：你好，你好吗？
+
+文本示例："你好，今天天气怎么样？"
+输出示例：Hello, how is the weather today?
+"""],
                             ["role": "user",
-                             "content": """
-请根据用户输入的文本，自动识别其语言（中文或英文），并将其翻译成另一种语言。请确保翻译准确无误，并只返回最终的翻译结果，不需要双引号包裹。
-
-输入示例：
-用户输入："Hello, how are you?"
-输出示例：
-"你好，你好吗？"
-
-用户输入："你好，今天天气怎么样？"
-输出示例：
-"Hello, how is the weather today?"
-
-以下是输入的内容：
-\(originText)
-"""]
+                             "content": originText]
                         ],
                         "stream": false
                     ],
@@ -105,6 +111,7 @@ struct ContentView: View {
                             resultText = content
                         }
                     case .failure(let error):
+                        resultText = "Error: \(error.localizedDescription)"
                         print("Error: \(error.localizedDescription)")
                     }
                 }
